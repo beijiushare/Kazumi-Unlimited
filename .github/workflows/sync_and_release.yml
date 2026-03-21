@@ -1,0 +1,54 @@
+name: "Sync Upstream and Release"
+
+on:
+  workflow_dispatch:  # 仅手动触发同步
+
+jobs:
+  sync-upstream:
+    name: "Sync upstream code and trigger release"
+    runs-on: "ubuntu-latest"
+    permissions: write-all
+    steps:
+      - name: Clone your forked repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 拉取完整历史
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Add upstream repository
+        run: |
+          # 替换为原项目仓库地址（确认是Predidit/Kazumi）
+          git remote add upstream https://github.com/Predidit/Kazumi.git || true
+          git fetch upstream
+
+      - name: Check for upstream updates
+        id: check_update
+        run: |
+          git checkout main
+          git diff main upstream/main --quiet
+          if [ $? -ne 0 ]; then
+            echo "has_update=true" >> $GITHUB_ENV
+            echo "Upstream has new commits, start sync..."
+          else
+            echo "has_update=false" >> $GITHUB_ENV
+            echo "No upstream updates, skip sync."
+          fi
+
+      - name: Merge upstream updates to main branch
+        if: env.has_update == 'true'
+        run: |
+          git merge upstream/main --no-edit
+          git push origin main
+
+      - name: Trigger release workflow
+        # 无论是否有更新，手动触发同步时都执行编译
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: "release"  # 触发上面的release工作流
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main  # 基于main分支触发编译
