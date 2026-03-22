@@ -30,6 +30,9 @@ jobs:
         id: check_update
         run: |
           git checkout main
+          git remote -v
+          git branch -a
+          git fetch upstream main
           git diff main upstream/main --quiet
           if [ $? -ne 0 ]; then
             echo "has_update=true" >> $GITHUB_ENV
