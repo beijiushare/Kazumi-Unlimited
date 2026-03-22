@@ -56,61 +56,63 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget showFilterSwitcher() {
-    return Wrap(
-      children: [
-        Observer(
-          builder: (context) => InkWell(
-            onTap: () {
-              searchPageController.setNotShowWatchedBangumis(
-                  !searchPageController.notShowWatchedBangumis);
-            },
-            child: ListTile(
-              title: const Text('不显示已看过的番剧'),
-              trailing: Switch(
-                value: searchPageController.notShowWatchedBangumis,
-                onChanged: (value) {
-                  searchPageController.setNotShowWatchedBangumis(value);
-                },
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Observer(
+            builder: (context) => InkWell(
+              onTap: () {
+                searchPageController.setNotShowWatchedBangumis(
+                    !searchPageController.notShowWatchedBangumis);
+              },
+              child: ListTile(
+                title: const Text('不显示已看过的番剧'),
+                trailing: Switch(
+                  value: searchPageController.notShowWatchedBangumis,
+                  onChanged: (value) {
+                    searchPageController.setNotShowWatchedBangumis(value);
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        Observer(
-          builder: (context) => InkWell(
-            onTap: () {
-              searchPageController.setNotShowAbandonedBangumis(
-                  !searchPageController.notShowAbandonedBangumis);
-            },
-            child: ListTile(
-              title: const Text('不显示已抛弃的番剧'),
-              trailing: Switch(
-                value: searchPageController.notShowAbandonedBangumis,
-                onChanged: (value) {
-                  searchPageController.setNotShowAbandonedBangumis(value);
-                },
+          Observer(
+            builder: (context) => InkWell(
+              onTap: () {
+                searchPageController.setNotShowAbandonedBangumis(
+                    !searchPageController.notShowAbandonedBangumis);
+              },
+              child: ListTile(
+                title: const Text('不显示已抛弃的番剧'),
+                trailing: Switch(
+                  value: searchPageController.notShowAbandonedBangumis,
+                  onChanged: (value) {
+                    searchPageController.setNotShowAbandonedBangumis(value);
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        Observer(
-          builder: (context) => InkWell(
-            onTap: () {
-              searchPageController.setHardSearchMode(
-                  !searchPageController.hardSearchMode);
-            },
-            child: ListTile(
-              title: const Text('硬搜索模式'),
-              subtitle: const Text('直接将搜索参数交给各个规则源，跳过Bangumi API'),
-              trailing: Switch(
-                value: searchPageController.hardSearchMode,
-                onChanged: (value) {
-                  searchPageController.setHardSearchMode(value);
-                },
+          Observer(
+            builder: (context) => InkWell(
+              onTap: () {
+                searchPageController.setHardSearchMode(
+                    !searchPageController.hardSearchMode);
+              },
+              child: ListTile(
+                title: const Text('硬搜索模式'),
+                subtitle: const Text('直接将搜索参数交给各个规则源，跳过Bangumi API'),
+                trailing: Switch(
+                  value: searchPageController.hardSearchMode,
+                  onChanged: (value) {
+                    searchPageController.setHardSearchMode(value);
+                  },
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
