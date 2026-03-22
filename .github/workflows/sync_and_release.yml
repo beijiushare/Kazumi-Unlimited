@@ -22,7 +22,7 @@ jobs:
 
       - name: Add upstream repository
         run: |
-          # 替换为原项目仓库地址（确认是Predidit/Kazumi）
+          # 原项目仓库地址
           git remote add upstream https://github.com/Predidit/Kazumi.git || true
           git fetch upstream
 
