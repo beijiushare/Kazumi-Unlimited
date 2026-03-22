@@ -82,7 +82,7 @@ abstract class _SearchPageController with Store {
     if (hardSearchMode) {
       isLoading = false;
       // 跳转到规则源选择页面
-      Modular.to.pushNamed('/info/source', arguments: {
+      Modular.to.pushNamed('/info', arguments: {
         'keyword': input,
         'isHardSearch': true,
       });
