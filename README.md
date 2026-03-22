@@ -1,7 +1,20 @@
-# Kazumi
+# Kazumi-Unlimited
 
 去除了原项目[Kazumi](https://github.com/Predidit/Kazumi)的一些限制，允许nsfw内容，同时对规则内有、但是bangumi API中无法检索出的内容，将直接跳过该api以展示内容。
-该分支暂时没有签名，不支持弹幕（没搞api）。
+
+该项目在windows和android平台应该能够和原项目共存，建议您同时下载两个项目，以获得完整体验。
+
+## 警告
+
+- 该分支暂时没有签名
+- 不支持弹幕
+- 可能无法及时同步原项目的更新
+- 可能存在未知问题
+- 缺乏对除了windows和android平台之外的测试
+
+要下载尝试本项目，您可以查看最新的 [action](https://github.com/beijiushare/Kazumi-Unlimited/actions)
+
+**下面是原项目的 README**
 
 使用 Flutter 开发的基于自定义规则的番剧采集与在线观看程序。使用最多五行基于 `Xpath` 语法的选择器构建自己的规则。支持规则导入与规则分享。支持基于 `Anime4K` 的实时超分辨率。绝赞开发中 (～￣▽￣)～
 

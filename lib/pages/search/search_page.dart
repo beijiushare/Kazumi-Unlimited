@@ -26,8 +26,8 @@ class _SearchPageState extends State<SearchPage> {
   final ScrollController scrollController = ScrollController();
 
   final List<Tab> tabs = [
-    Tab(text: "排序方式"),
     Tab(text: "过滤器"),
+    Tab(text: "排序方式"),
   ];
 
   @override
@@ -62,6 +62,24 @@ class _SearchPageState extends State<SearchPage> {
           Observer(
             builder: (context) => InkWell(
               onTap: () {
+                searchPageController.setHardSearchMode(
+                    !searchPageController.hardSearchMode);
+              },
+              child: ListTile(
+                title: const Text('硬搜索模式'),
+                subtitle: const Text('直接将搜索参数交给各个规则源，跳过Bangumi API'),
+                trailing: Switch(
+                  value: searchPageController.hardSearchMode,
+                  onChanged: (value) {
+                    searchPageController.setHardSearchMode(value);
+                  },
+                ),
+              ),
+            ),
+          ),
+          Observer(
+            builder: (context) => InkWell(
+              onTap: () {
                 searchPageController.setNotShowWatchedBangumis(
                     !searchPageController.notShowWatchedBangumis);
               },
@@ -88,24 +106,6 @@ class _SearchPageState extends State<SearchPage> {
                   value: searchPageController.notShowAbandonedBangumis,
                   onChanged: (value) {
                     searchPageController.setNotShowAbandonedBangumis(value);
-                  },
-                ),
-              ),
-            ),
-          ),
-          Observer(
-            builder: (context) => InkWell(
-              onTap: () {
-                searchPageController.setHardSearchMode(
-                    !searchPageController.hardSearchMode);
-              },
-              child: ListTile(
-                title: const Text('硬搜索模式'),
-                subtitle: const Text('直接将搜索参数交给各个规则源，跳过Bangumi API'),
-                trailing: Switch(
-                  value: searchPageController.hardSearchMode,
-                  onChanged: (value) {
-                    searchPageController.setHardSearchMode(value);
                   },
                 ),
               ),
