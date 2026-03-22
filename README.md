@@ -13,7 +13,7 @@
 - 可能只进行了windows和android平台之外的测试
 - 不支持ios macos
 
-要下载尝试本项目，您可以查看最新的 [action](https://github.com/beijiushare/Kazumi-Unlimited/actions)
+要下载尝试本项目，您可以查看最新的 [release](https://github.com/beijiushare/Kazumi-Unlimited/releases/latest)
 
 **下面是原项目的 README**
 
