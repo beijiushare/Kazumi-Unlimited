@@ -213,7 +213,7 @@ class _SearchPageState extends State<SearchPage> {
             context: context,
             builder: (context) {
               return showSearchOptionTabBar(
-                  options: [showSortSwitcher(), showFilterSwitcher()]);
+                  options: [showFilterSwitcher(), showSortSwitcher()]);
             },
           );
         },
