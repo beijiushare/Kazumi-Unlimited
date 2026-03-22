@@ -10,8 +10,8 @@
 - 不支持弹幕
 - 可能无法及时同步原项目的更新
 - 可能存在未知问题
-- 缺乏对除了windows和android平台之外的测试
-- 暂不支持 macos
+- 可能只进行了windows和android平台之外的测试
+- 不支持ios macos
 
 要下载尝试本项目，您可以查看最新的 [action](https://github.com/beijiushare/Kazumi-Unlimited/actions)
 
