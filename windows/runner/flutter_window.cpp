@@ -88,7 +88,7 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
 void FlutterWindow::RegisterIntentChannel() {
   auto window_channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          flutter_controller_->engine()->messenger(), "com.predidit.kazumi/intent",
+          flutter_controller_->engine()->messenger(), "top.beijiu.kazumi_unlimited/intent",
           &flutter::StandardMethodCodec::GetInstance());
 
   window_channel->SetMethodCallHandler([this](const auto& call, auto result) {
@@ -122,7 +122,7 @@ void FlutterWindow::RegisterIntentChannel() {
 void FlutterWindow::RegisterStorageChannel() {
   auto storage_channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          flutter_controller_->engine()->messenger(), "com.predidit.kazumi/storage",
+          flutter_controller_->engine()->messenger(), "top.beijiu.kazumi_unlimited/storage",
           &flutter::StandardMethodCodec::GetInstance());
 
   storage_channel->SetMethodCallHandler([](const auto& call, auto result) {

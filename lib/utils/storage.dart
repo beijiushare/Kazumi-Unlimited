@@ -318,5 +318,6 @@ class SettingBoxKey {
       proxyTestUrl = 'proxyTestUrl',
       showRating = 'showRating',
       downloadParallelEpisodes = 'downloadParallelEpisodes',
-      downloadParallelSegments = 'downloadParallelSegments';
+      downloadParallelSegments = 'downloadParallelSegments',
+      firstInstall = 'firstInstall';
 }

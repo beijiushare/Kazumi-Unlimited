@@ -1,7 +1,10 @@
 name: "release"
 
 on:
-  workflow_dispatch:  # 仅保留手动触发，无任何输入参数
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:  # 手动触发
 
 jobs:
   flutter-build-android:
@@ -35,17 +38,23 @@ jobs:
       - name: Build Flutter for Android
         run: flutter build apk --split-per-abi
         shell: bash
+      - name: Set build version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          else
+            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Package android build output
         run: |
-          # 仅用时间戳命名安装包，无Tag逻辑
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk Kazumi_android_${TIMESTAMP}.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk Kazumi-Unlimited_android_${{ env.version }}.apk
         shell: bash
       - name: Upload android outputs
         uses: actions/upload-artifact@v4
         with:
           name: android_outputs
-          path: Kazumi_android_*.apk
+          path: Kazumi-Unlimited_android_*.apk
 
   flutter-build-windows:
     name: "Release for windows"
@@ -70,15 +79,21 @@ jobs:
           java-version: '18'
       - run: flutter pub get
       - run: flutter build windows   
+      - name: Set build version
+        run: |
+          if ("${{ github.event_name }}" -eq "push" -and "${{ github.ref_type }}" -eq "tag") {
+            $version = "${{ github.ref }}".Replace('refs/tags/', '')
+          } else {
+            $version = Get-Date -Format "yyyyMMddHHmmss"
+          }
+          echo "version=$version" >> $env:GITHUB_ENV
       - run: |
-          # 仅用时间戳命名Windows包
-          $TIMESTAMP = Get-Date -Format "yyyyMMddHHmmss"
-          Compress-Archive build/windows/x64/runner/Release/* Kazumi_windows_${TIMESTAMP}.zip
+          Compress-Archive build/windows/x64/runner/Release/* Kazumi-Unlimited_windows_${env:version}.zip
       - name: Upload windows outputs
         uses: actions/upload-artifact@v4
         with:
           name: windows_outputs
-          path: Kazumi_windows_*.zip
+          path: Kazumi-Unlimited_windows_*.zip
 
   flutter-build-linux:
     name: "Release for Linux"
@@ -119,48 +134,55 @@ jobs:
       - name: Build Flutter for Linux
         run: flutter build linux
         shell: bash
+      - name: Set build version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          else
+            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Package linux build output
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
           # Tarball package
-          tar -zcvf Kazumi_linux_${TIMESTAMP}_amd64.tar.gz -C build/linux/x64/release/bundle .
+          tar -zcvf Kazumi-Unlimited_linux_${{ env.version }}_amd64.tar.gz -C build/linux/x64/release/bundle .
           # Debian package
-          mkdir Kazumi_linux_${TIMESTAMP}_amd64
-          cd Kazumi_linux_${TIMESTAMP}_amd64
-          mkdir -p opt/Kazumi
+          mkdir Kazumi-Unlimited_linux_${{ env.version }}_amd64
+          cd Kazumi-Unlimited_linux_${{ env.version }}_amd64
+          mkdir -p opt/Kazumi-Unlimited
           mkdir -p usr/share/applications
           mkdir -p usr/share/icons/hicolor/512x512/apps
-          cp -r ../build/linux/x64/release/bundle/* opt/Kazumi
+          cp -r ../build/linux/x64/release/bundle/* opt/Kazumi-Unlimited
           cp -r ../assets/linux/DEBIAN .
           chmod 0755 DEBIAN/postinst
           chmod 0755 DEBIAN/postrm
           cat>DEBIAN/control<<EOF
           Maintainer: custom <your-email@example.com>
-          Package: Kazumi
-          Version: ${TIMESTAMP}
+          Package: Kazumi-Unlimited
+          Version: ${{ env.version }}
           Section: x11
           Priority: optional
           Architecture: amd64
           Essential: no
           Installed-Size: 34648
           Description: Watch Animes online with custom modification.
-          Homepage: https://github.com/你的账号/Kazumi
+          Homepage: https://github.com/beijiushare/Kazumi-Unlimited
           Depends: libayatana-appindicator3-1,
                    gir1.2-ayatanaappindicator3-0.1,
                    libwebkit2gtk-4.1-0
           EOF
-          cp ../assets/linux/io.github.Predidit.Kazumi.desktop usr/share/applications
-          cp ../assets/images/logo/logo_linux.png usr/share/icons/hicolor/512x512/apps/io.github.Predidit.Kazumi.png
+          cp ../assets/linux/io.github.Predidit.Kazumi.desktop usr/share/applications/io.github.beijiushare.Kazumi-Unlimited.desktop
+          cp ../assets/images/logo/logo_linux.png usr/share/icons/hicolor/512x512/apps/io.github.beijiushare.Kazumi-Unlimited.png
           cd ..
-          dpkg-deb --build --root-owner-group Kazumi_linux_${TIMESTAMP}_amd64
+          dpkg-deb --build --root-owner-group Kazumi-Unlimited_linux_${{ env.version }}_amd64
         shell: bash
       - name: Upload linux outputs
         uses: actions/upload-artifact@v4
         with:
           name: linux_outputs
           path: |
-            Kazumi_linux_*.tar.gz
-            Kazumi_linux_*.deb
+            Kazumi-Unlimited_linux_*.tar.gz
+            Kazumi-Unlimited_linux_*.deb
 
   flutter-build-ios:
     name: "Release for iOS"
@@ -176,46 +198,82 @@ jobs:
           channel: stable
           flutter-version-file: pubspec.yaml
       - run: flutter pub get
+      - name: Set build version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          else
+            echo "version=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Build IPA
         run: |
           flutter build ios --release --no-codesign
       - name: Create IPA
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
           mkdir Payload
           cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
           find Payload/Runner.app/Frameworks -type d -name "*.framework" -exec codesign --force --sign - --preserve-metadata=identifier,entitlements {} \;
-          zip -q -r Kazumi_ios_${TIMESTAMP}_no_sign.ipa Payload
+          zip -q -r Kazumi-Unlimited_ios_${{ env.version }}_no_sign.ipa Payload
       - name: Upload iOS build
         uses: actions/upload-artifact@v4
         with:
           name: ios_outputs
-          path: Kazumi_ios_*.ipa
+          path: Kazumi-Unlimited_ios_*.ipa
 
-  flutter-build-macos:
-    name: "Release for Macos"
-    runs-on: "macos-latest"
+  release:
+    name: "Create Release"
+    runs-on: "ubuntu-latest"
+    needs: [flutter-build-android, flutter-build-windows, flutter-build-linux, flutter-build-ios]
     permissions: write-all
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
-      - run: echo "macOS build start"
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2.16.0
+      - name: Extract tag name
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        shell: bash
+        
+      - name: Download android build file
+        uses: actions/download-artifact@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
-      - run: flutter pub get
-      - run: flutter build macos --release
-      - name: Create DMG
-        run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          npm install --global create-dmg
-          create-dmg build/macos/Build/Products/Release/Kazumi.app
-          mv Kazumi*.dmg Kazumi_macos_${TIMESTAMP}.dmg
-        continue-on-error: true
-      - name: Upload MacOS build
-        uses: actions/upload-artifact@v4
+          name: android_outputs
+          path: android_outputs
+      - name: Copy android build file to root
+        run: cp android_outputs/* .
+        
+      - name: Download windows build file
+        uses: actions/download-artifact@v4
         with:
-          name: macos_outputs
-          path: Kazumi_macos_*.dmg
+          name: windows_outputs
+          path: windows_outputs
+      - name: Copy windows build file to root
+        run: cp windows_outputs/* .
+        
+      - name: Download linux build file
+        uses: actions/download-artifact@v4
+        with:
+          name: linux_outputs
+          path: linux_outputs
+      - name: Copy linux build file to root
+        run: cp linux_outputs/* .
+        
+      - name: Download iOS build file
+        uses: actions/download-artifact@v4
+        with:
+          name: ios_outputs
+          path: ios_outputs
+      - name: Copy iOS build file to root
+        run: cp ios_outputs/* .
+        
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Kazumi-Unlimited_android_*.apk
+            Kazumi-Unlimited_windows_*.zip
+            Kazumi-Unlimited_linux_*.tar.gz
+            Kazumi-Unlimited_linux_*.deb
+            Kazumi-Unlimited_ios_*.ipa
+
+

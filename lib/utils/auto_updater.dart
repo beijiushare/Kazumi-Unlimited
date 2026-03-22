@@ -17,7 +17,6 @@ enum InstallationType {
   windowsPortable, // Kazumi_windows_1.7.5.zip
   linuxDeb, // Kazumi_linux_1.7.5_amd64.deb
   linuxTar, // Kazumi_linux_1.7.5_amd64.tar.gz
-  macosDmg, // Kazumi_macos_1.7.5.dmg
   androidApk, // Kazumi_android_1.7.5.apk
   ios, // iOS App
   unknown,
@@ -78,9 +77,7 @@ class AutoUpdater {
         // Linux 平台支持 DEB 和 TAR.GZ
         availableTypes.add(InstallationType.linuxDeb);
         availableTypes.add(InstallationType.linuxTar);
-      } else if (Platform.isMacOS) {
-        // macOS 平台支持 DMG
-        availableTypes.add(InstallationType.macosDmg);
+
       } else if (Platform.isIOS) {
         // iOS 平台通过 Github
         availableTypes.add(InstallationType.ios);
@@ -322,8 +319,7 @@ class AutoUpdater {
         return 'Linux DEB 包';
       case InstallationType.linuxTar:
         return 'Linux TAR 包';
-      case InstallationType.macosDmg:
-        return 'macOS DMG 镜像';
+
       case InstallationType.androidApk:
         return 'Android APK';
       case InstallationType.ios:
@@ -664,11 +660,7 @@ class AutoUpdater {
         }
         await Future.delayed(const Duration(seconds: 1));
         exit(0);
-      } else if (Platform.isMacOS) {
-        if (filePath.endsWith('.dmg')) {
-          await Process.start('open', [filePath]);
-          exit(0);
-        }
+
       } else if (Platform.isAndroid) {
         final result = await OpenFilex.open(filePath);
         if (result.type != ResultType.done) {
@@ -706,12 +698,7 @@ class AutoUpdater {
         } else {
           await Process.start('explorer.exe', [targetDirOrFile.replaceAll('/', r'\')], runInShell: true);
         }
-      } else if (Platform.isMacOS) {
-        if (type == FileSystemEntityType.file) {
-          await Process.start('open', ['-R', filePath]);
-        } else {
-          await Process.start('open', [targetDirOrFile]);
-        }
+
       } else if (Platform.isLinux) {
         // 尝试打开包含文件的文件夹
         await Process.start('xdg-open', [targetDirOrFile]);
@@ -756,8 +743,7 @@ class AutoUpdater {
         return ['windows', '.msix'];
       case InstallationType.windowsPortable:
         return ['windows', '.zip'];
-      case InstallationType.macosDmg:
-        return ['macos', '.dmg'];
+
       case InstallationType.androidApk:
         return ['android', '.apk'];
       // 以下类型直接跳转到 GitHub Release 页面，不需要下载文件
@@ -782,14 +768,13 @@ class AutoUpdater {
     String extension = '';
     if (Platform.isWindows) {
       extension = '.msix';
-    } else if (Platform.isMacOS) {
-      extension = '.dmg';
+
     } else if (Platform.isLinux) {
       extension = '.deb';
     } else if (Platform.isAndroid) {
       extension = '.apk';
     }
-    return 'Kazumi-$version$extension';
+    return 'Kazumi-Unlimited-$version$extension';
   }
 
   /// 从 assets 中获取文件的哈希值

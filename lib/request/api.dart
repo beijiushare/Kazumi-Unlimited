@@ -13,7 +13,7 @@ class Api {
   static const String pluginShop = 'https://raw.githubusercontent.com/Predidit/KazumiRules/main/';
   /// 在线升级
   static const String latestApp =
-      'https://api.github.com/repos/Predidit/Kazumi/releases/latest'; 
+      'https://api.github.com/repos/beijiushare/Kazumi-Unlimited/releases/latest'; 
   /// Github镜像
   static const String gitMirror = 'https://ghfast.top/';
   /// 弹弹官网

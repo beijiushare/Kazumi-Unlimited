@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=Kazumi
+Name=Kazumi-Unlimited
 Comment=Watch Animes online with danmaku support.
 Comment[zh_CN]=一款好用的追番软件
-Exec=kazumi
-StartupWMClass=kazumi
-Icon=io.github.Predidit.Kazumi
+Exec=kazumi_unlimited
+StartupWMClass=kazumi_unlimited
+Icon=io.github.Predidit.Kazumi-Unlimited
 Terminal=false
 Type=Application
 Categories=AudioVideo;Audio;Video;

@@ -153,7 +153,60 @@ class _AboutPageState extends State<AboutPage> {
               ],
             ),
             SettingsSection(
-              title: Text('外部链接', style: TextStyle(fontFamily: fontFamily)),
+              title: Text('关于 Kazumi-Unlimited', style: TextStyle(fontFamily: fontFamily)),
+              tiles: [
+                SettingsTile.navigation(
+                  onPressed: (_) {
+                    KazumiDialog.show(
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('关于 Kazumi-Unlimited'),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('这不是kazumi原项目，Kazumi-Unlimited在原项目上进行了一些更改，但也可能带来一些不受欢迎的问题，建议您同时安装本项目与原项目。'),
+                                const SizedBox(height: 16),
+                                GestureDetector(
+                                  onTap: () {
+                                    launchUrl(Uri.parse('https://github.com/beijiushare/Kazumi-Unlimited/blob/main/README.md'),
+                                        mode: LaunchMode.externalApplication);
+                                  },
+                                  child: Text(
+                                    '[了解详情](https://github.com/beijiushare/Kazumi-Unlimited/blob/main/README.md)',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => KazumiDialog.dismiss(),
+                              child: const Text('确定'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  title: Text('关于 Kazumi-Unlimited', style: TextStyle(fontFamily: fontFamily)),
+                ),
+                SettingsTile.navigation(
+                  onPressed: (_) {
+                    launchUrl(Uri.parse('https://github.com/beijiushare/Kazumi-Unlimited'),
+                        mode: LaunchMode.externalApplication);
+                  },
+                  title: Text('仓库地址', style: TextStyle(fontFamily: fontFamily)),
+                  value: Text('GitHub', style: TextStyle(fontFamily: fontFamily)),
+                ),
+              ],
+            ),
+            SettingsSection(
+              title: Text('原项目外部链接', style: TextStyle(fontFamily: fontFamily)),
               tiles: [
                 SettingsTile.navigation(
                   onPressed: (_) {

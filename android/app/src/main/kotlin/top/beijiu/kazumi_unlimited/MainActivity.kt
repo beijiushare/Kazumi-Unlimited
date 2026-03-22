@@ -1,4 +1,4 @@
-package com.example.kazumi
+package top.beijiu.kazumi_unlimited
 
 import android.content.Intent
 import android.os.Build
@@ -11,8 +11,8 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.predidit.kazumi/intent"
-    private val STORAGE_CHANNEL = "com.predidit.kazumi/storage"
+    private val CHANNEL = "top.beijiu.kazumi_unlimited/intent"
+    private val STORAGE_CHANNEL = "top.beijiu.kazumi_unlimited/storage"
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

@@ -44,11 +44,6 @@ jobs:
         run: |
           git merge upstream/main --no-edit
           git push origin main
-
-      - name: Trigger release workflow
-        # 无论是否有更新，手动触发同步时都执行编译
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: "release"  # 触发上面的release工作流
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: main  # 基于main分支触发编译
+          echo "Sync completed successfully!"
+        else:
+          echo "No upstream updates to sync."

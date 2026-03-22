@@ -16,6 +16,7 @@ import 'package:kazumi/bean/settings/theme_provider.dart';
 import 'package:kazumi/shaders/shaders_controller.dart';
 import 'package:kazumi/pages/download/download_controller.dart';
 import 'package:kazumi/utils/background_download_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InitPage extends StatefulWidget {
   const InitPage({super.key});
@@ -54,6 +55,9 @@ class _InitPageState extends State<InitPage> {
 
     await _checkRunningOnX11();
     await _pluginInit();
+    
+    // 检查是否是首次安装
+    await _checkFirstInstall();
 
     _startDefaultPage();
     // delay to ensure that the default page is fully loaded
@@ -126,6 +130,54 @@ class _InitPageState extends State<InitPage> {
 
   Future<void> _loadShaders() async {
     await shadersController.copyShadersToExternalDirectory();
+  }
+
+  Future<void> _checkFirstInstall() async {
+    bool isFirstInstall = setting.get(SettingBoxKey.firstInstall, defaultValue: true);
+    if (isFirstInstall) {
+      await KazumiDialog.show(
+        clickMaskDismiss: false,
+        builder: (context) {
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: const Text('关于 Kazumi-Unlimited'),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('这不是kazumi原项目，Kazumi-Unlimited在原项目上进行了一些更改，但也可能带来一些不受欢迎的问题，建议您同时安装本项目与原项目。'),
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () {
+                        launchUrl(Uri.parse('https://github.com/beijiushare/Kazumi-Unlimited/blob/main/README.md'),
+                            mode: LaunchMode.externalApplication);
+                      },
+                      child: Text(
+                        '[了解详情](https://github.com/beijiushare/Kazumi-Unlimited/blob/main/README.md)',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    setting.put(SettingBoxKey.firstInstall, false);
+                    KazumiDialog.dismiss();
+                  },
+                  child: const Text('确定'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
   }
 
   
