@@ -32,6 +32,12 @@ abstract class ICollectRepository {
   /// 更新搜索页"不显示已抛弃番剧"设置
   Future<void> updateSearchNotShowAbandonedBangumis(bool value);
 
+  /// 获取搜索页"硬搜索模式"设置
+  bool getSearchHardSearchMode();
+
+  /// 更新搜索页"硬搜索模式"设置
+  Future<void> updateSearchHardSearchMode(bool value);
+
   // ========== 时间表页过滤器设置 ==========
 
   /// 获取时间表页"不显示已抛弃番剧"设置
@@ -149,6 +155,37 @@ class CollectRepository implements ICollectRepository {
     } catch (e, stackTrace) {
       KazumiLogger().e(
         'GStorage: update search not show abandoned bangumis setting failed. value=$value',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  bool getSearchHardSearchMode() {
+    try {
+      final value = _settingBox.get(
+        SettingBoxKey.searchHardSearchMode,
+        defaultValue: false,
+      );
+      return value is bool ? value : false;
+    } catch (e, stackTrace) {
+      KazumiLogger().e(
+        'GStorage: get search hard search mode setting failed, using default false',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return false;
+    }
+  }
+
+  @override
+  Future<void> updateSearchHardSearchMode(bool value) async {
+    try {
+      await _settingBox.put(SettingBoxKey.searchHardSearchMode, value);
+    } catch (e, stackTrace) {
+      KazumiLogger().e(
+        'GStorage: update search hard search mode setting failed. value=$value',
         error: e,
         stackTrace: stackTrace,
       );

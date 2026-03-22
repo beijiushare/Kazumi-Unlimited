@@ -307,6 +307,7 @@ class SettingBoxKey {
       playerLogLevel = 'playerLogLevel',
       searchNotShowWatchedBangumis = 'searchNotShowWatchedBangumis',
       searchNotShowAbandonedBangumis = 'searchNotShowAbandonedBangumis',
+      searchHardSearchMode = 'searchHardSearchMode',
       timelineNotShowAbandonedBangumis = 'timelineNotShowAbandonedBangumis',
       timelineNotShowWatchedBangumis = 'timelineNotShowWatchedBangumis',
       useSystemFont = 'useSystemFont',

@@ -135,15 +135,16 @@ class _InfoPageState extends State<InfoPage> with TickerProviderStateMixin {
         name: hardSearchKeyword ?? '',
         nameCn: hardSearchKeyword ?? '',
         summary: '',
-        images: {},
-        tags: [],
-        rank: 0,
         airDate: '',
         airWeekday: 0,
+        rank: 0,
+        images: {},
+        tags: [],
         alias: [],
-        ratingScore: '',
-        votes: '',
-        votesCount: '',
+        ratingScore: 0.0,
+        votes: 0,
+        votesCount: [],
+        info: '',
       );
     } else {
       isHardSearch = false;

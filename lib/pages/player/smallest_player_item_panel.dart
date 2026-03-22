@@ -587,8 +587,8 @@ class _SmallestPlayerItemPanelState extends State<SmallestPlayerItemPanel> {
                     for (final double i
                         in defaultPlaySpeedList) ...<MenuItemButton>[
                       MenuItemButton(
-                        onPressed: () async {
-                          await widget.setPlaybackSpeed(i);
+                        onPressed: () {
+                          widget.setPlaybackSpeed(i);
                         },
                         child: Container(
                           height: 48,
