@@ -26,20 +26,27 @@ jobs:
           git remote add upstream https://github.com/Predidit/Kazumi.git || true
           git fetch upstream
 
-      - name: Check for upstream updates
+      - name: Check for upstream version updates
         id: check_update
         run: |
           git checkout main
-          git remote -v
-          git branch -a
           git fetch upstream main
-          git diff main upstream/main --quiet
-          if [ $? -ne 0 ]; then
+          
+          # 获取当前项目的版本号
+          CURRENT_VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f 2)
+          echo "Current version: $CURRENT_VERSION"
+          
+          # 获取上游项目的版本号
+          UPSTREAM_VERSION=$(git show upstream/main:pubspec.yaml | grep '^version:' | cut -d ' ' -f 2)
+          echo "Upstream version: $UPSTREAM_VERSION"
+          
+          # 比较版本号
+          if [ "$CURRENT_VERSION" != "$UPSTREAM_VERSION" ]; then
             echo "has_update=true" >> $GITHUB_ENV
-            echo "Upstream has new commits, start sync..."
+            echo "Upstream has new version: $UPSTREAM_VERSION, current version: $CURRENT_VERSION"
           else
             echo "has_update=false" >> $GITHUB_ENV
-            echo "No upstream updates, skip sync."
+            echo "No version updates, skip sync."
           fi
 
       - name: Merge upstream updates to main branch
