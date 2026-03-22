@@ -2,7 +2,7 @@
 
 在原项目[Kazumi](https://github.com/Predidit/Kazumi)进行了一些更改，允许nsfw内容，同时对规则内有、但是bangumi API中无法检索出的内容，可以通过“硬搜索”直接跳过该api以展示内容。
 
-该项目在windows和android平台应该能够和原项目共存，建议您同时下载两个项目，以获得完整体验。
+该项目在windows和android平台应该能够和原项目共存，建议您同时下载两个项目，以获得完整体验。与原项目是独立的更新进度。
 
 ## 警告
 
